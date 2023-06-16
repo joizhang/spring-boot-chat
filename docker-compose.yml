@@ -1,0 +1,62 @@
+version: '3'
+services:
+  chat2-mysql:
+    build:
+      context: ./db
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    container_name: chat2-mysql
+    hostname: chat2-mysql
+    ports:
+      - "3306:3306"
+    restart: always
+
+  chat2-redis:
+    image: redis:alpine
+    container_name: chat2-redis
+    hostname: chat2-redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  chat2-rabbitmq:
+    image: rabbitmq:3.11-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
+    container_name: chat2-rabbitmq
+    hostname: chat2-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+#  chat-gateway:
+#    build:
+#      context: ./chat-gateway
+#    image: chat-gateway
+#    container_name: chat-gateway
+#    hostname: chat-gateway
+#    ports:
+#      - "9999:9999"
+#    restart: always
+#
+#  chat-auth:
+#    build:
+#      context: ./chat-auth
+#    image: chat-auth
+#    container_name: chat-auth
+#    hostname: chat-auth
+#    depends_on:
+#      - chat-gateway
+#    restart: always
+#
+#  chat-upms:
+#    build:
+#      context: ./chat-upms/chat-upms-biz
+#    image: chat-upms
+#    container_name: chat-upms
+#    hostname: chat-upms
+#    depends_on:
+#      - chat-gateway
+#    restart: always

@@ -1,0 +1,80 @@
+# 配置文件加密根密码
+jasypt:
+  encryptor:
+    password: chat #根密码
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+server:
+  port: 9999
+
+# Spring 相关
+spring:
+  application:
+    name: @artifactId@
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(LvW9ulqQJxMYiMPo4c4X+g==) # root
+    password: ENC(LXaP7OTcW1V/fijimCJT0zLZgh9o59Oj)
+    url: jdbc:mysql://localhost:3306/chat_web?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    password: ENC(fDnzIsddShDIl0M2apLfBg==)
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ENC(msCBv+Uv8/21qE1p+Acqhg==) # admin
+    password: ENC(pSHCCpbOyq6+nhH6povIZQ==) # admin
+    virtual-host: /
+    # 手动提交消息
+    listener:
+      simple:
+        acknowledge-mode: manual
+      direct:
+        acknowledge-mode: manual
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+# MyBaits-plus配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      table-underline: true
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+
+# spring security 配置
+security:
+  oauth2:
+    # 通用放行URL，服务个性化，请在对应配置文件覆盖
+    ignore:
+      urls:
+        - /v3/api-docs
+        - /actuator/**
+
+# swagger 配置
+swagger:
+  enabled: true
+  title: Swagger API
+  gateway: http://${GATEWAY_HOST:chat-gateway}:${GATEWAY-PORT:9999}
+  token-url: ${swagger.gateway}/auth/oauth2/token
+  scope: server
+  services:
+    chat-upms-biz: admin
+    chat-web-biz: chat
