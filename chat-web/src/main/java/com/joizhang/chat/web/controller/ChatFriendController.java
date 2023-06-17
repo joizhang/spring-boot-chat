@@ -18,7 +18,7 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/svc/friend")
+@RequestMapping("/chat/svc/friend")
 @Tag(name = "朋友关系模块")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class ChatFriendController {

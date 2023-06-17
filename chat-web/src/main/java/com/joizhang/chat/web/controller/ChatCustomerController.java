@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/svc/customer")
+@RequestMapping("/chat/svc/customer")
 @Tag(name = "聊天用户模块")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class ChatCustomerController {

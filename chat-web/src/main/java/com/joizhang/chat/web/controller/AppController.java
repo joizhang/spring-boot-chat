@@ -20,7 +20,7 @@ import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/svc/app")
+@RequestMapping("/chat/svc/app")
 @Tag(name = "移动端登录模块")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class AppController {

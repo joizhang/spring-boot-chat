@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/svc/message")
+@RequestMapping("/chat/svc/message")
 @Tag(name = "聊天消息模块")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class ChatMessageController {

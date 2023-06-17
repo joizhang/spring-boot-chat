@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/auth/token")
 public class ChatTokenEndPoint {
 
     private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter =

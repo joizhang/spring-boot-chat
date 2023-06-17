@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/svc/register")
+@RequestMapping("/chat/svc/register")
 @ConditionalOnProperty(name = "register.customer", matchIfMissing = true)
 public class ChatCustomerRegisterController {
 
