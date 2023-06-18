@@ -12,6 +12,12 @@ server:
 spring:
   application:
     name: @artifactId@
+  boot:
+    admin:
+      context-path: /monitor
+      client:
+        username: admin
+        password: admin
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -35,6 +41,10 @@ spring:
         acknowledge-mode: manual
       direct:
         acknowledge-mode: manual
+  security:
+    user:
+      name: ENC(K24SXIYix81ef7ZQaWHgqQ==)     # admin
+      password: ENC(T2bJImy7KWiM1QxT7X8lkA==) # admin
 
 # 暴露监控端点
 management:
@@ -44,7 +54,7 @@ management:
         include: "*"
   endpoint:
     health:
-      show-details: ALWAYS
+      show-details: always
 
 # MyBaits-plus配置
 mybatis-plus:
@@ -67,14 +77,19 @@ security:
       urls:
         - /v3/api-docs
         - /actuator/**
+        - /code
+#    client:
+#      client-id: ENC(27v1agvAug87ANOVnbKdsw==)
+#      client-secret: ENC(VbnkopxrwgbFVKp+UxJ2pg==)
+#      scope: servers
 
 # swagger 配置
-swagger:
-  enabled: true
-  title: Swagger API
-  gateway: http://${GATEWAY_HOST:chat-gateway}:${GATEWAY-PORT:9999}
-  token-url: ${swagger.gateway}/auth/oauth2/token
-  scope: server
-  services:
-    chat-upms-biz: admin
-    chat-web-biz: chat
+#swagger:
+#  enabled: true
+#  title: Swagger API
+#  gateway: http://${GATEWAY_HOST:chat-gateway}:${GATEWAY-PORT:9999}
+#  token-url: ${swagger.gateway}/auth/oauth2/token
+#  scope: server
+#  services:
+#    chat-upms-biz: admin
+#    chat-web-biz: chat
