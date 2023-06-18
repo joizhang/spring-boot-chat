@@ -30,8 +30,8 @@ import java.util.Objects;
 public class SysLogUtils {
 
     public SysLog getSysLog() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) Objects
-                .requireNonNull(RequestContextHolder.getRequestAttributes());
+        ServletRequestAttributes requestAttributes =
+                (ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes());
         HttpServletRequest request = requestAttributes.getRequest();
         SysLog sysLog = new SysLog();
         sysLog.setType(LogTypeEnum.NORMAL.getType());
@@ -100,7 +100,8 @@ public class SysLogUtils {
      * @return 装载参数的容器
      */
     public EvaluationContext getContext(Object[] arguments, Method signatureMethod) {
-        LocalVariableTableParameterNameDiscoverer localVariableTableParameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+        LocalVariableTableParameterNameDiscoverer localVariableTableParameterNameDiscoverer =
+                new LocalVariableTableParameterNameDiscoverer();
         String[] parameterNames = localVariableTableParameterNameDiscoverer.getParameterNames(signatureMethod);
         EvaluationContext context = new StandardEvaluationContext();
         if (parameterNames == null) {
