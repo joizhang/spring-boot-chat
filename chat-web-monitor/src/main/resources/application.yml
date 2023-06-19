@@ -1,0 +1,27 @@
+# 配置文件加密根密码
+jasypt:
+  encryptor:
+    password: chat #根密码
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+server:
+  port: 5001
+
+spring:
+  application:
+    name: @artifactId@
+  security:
+    user:
+      name: ENC(K24SXIYix81ef7ZQaWHgqQ==)     # admin
+      password: ENC(T2bJImy7KWiM1QxT7X8lkA==) # admin
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
