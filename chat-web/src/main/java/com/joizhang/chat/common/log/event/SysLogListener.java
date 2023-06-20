@@ -1,7 +1,7 @@
 package com.joizhang.chat.common.log.event;
 
 import com.joizhang.chat.admin.api.entity.SysLog;
-import com.joizhang.chat.admin.controller.SysLogController;
+import com.joizhang.chat.admin.service.SysLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -15,14 +15,14 @@ import org.springframework.scheduling.annotation.Async;
 @RequiredArgsConstructor
 public class SysLogListener {
 
-    private final SysLogController remoteLogService;
+    private final SysLogService sysLogService;
 
     @Async
     @Order
     @EventListener(SysLogEvent.class)
     public void saveSysLog(SysLogEvent event) {
         SysLog sysLog = (SysLog) event.getSource();
-        remoteLogService.save(sysLog);
+        sysLogService.save(sysLog);
     }
 
 }

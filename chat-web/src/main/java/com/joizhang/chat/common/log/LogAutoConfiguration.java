@@ -1,6 +1,6 @@
 package com.joizhang.chat.common.log;
 
-import com.joizhang.chat.admin.controller.SysLogController;
+import com.joizhang.chat.admin.service.SysLogService;
 import com.joizhang.chat.common.log.aspect.SysLogAspect;
 import com.joizhang.chat.common.log.event.SysLogListener;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class LogAutoConfiguration {
 
     @Bean
-    public SysLogListener sysLogListener(SysLogController remoteLogService) {
-        return new SysLogListener(remoteLogService);
+    public SysLogListener sysLogListener(SysLogService sysLogService) {
+        return new SysLogListener(sysLogService);
     }
 
     @Bean
