@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.server.resource.introspection.OpaqueT
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * 资源服务器认证授权配置
+ * 配置OAuth 2.0资源服务器
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +39,8 @@ public class MyResourceServerConfiguration {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorizeRequests -> authorizeRequests
+        http
+                .authorizeRequests(authorizeRequests -> authorizeRequests
                         .antMatchers(ArrayUtil.toArray(permitAllUrl.getUrls(), String.class))
                         .permitAll()
                         .anyRequest()

@@ -1,5 +1,8 @@
 package com.joizhang.chat.auth.support.password;
 
+import cn.hutool.crypto.Mode;
+import cn.hutool.crypto.Padding;
+import cn.hutool.crypto.symmetric.AES;
 import com.joizhang.chat.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +16,8 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,6 +29,9 @@ import java.util.Objects;
 @Slf4j
 public class OAuth2ResourceOwnerPasswordAuthenticationProvider
         extends OAuth2ResourceOwnerBaseAuthenticationProvider<OAuth2ResourceOwnerPasswordAuthenticationToken> {
+
+    public static final String KEY = "thanks,pig4cloud";
+    public static final String AES = "AES";
 
     /**
      * Constructs an {@code OAuth2AuthorizationCodeAuthenticationProvider} using the
@@ -59,6 +67,12 @@ public class OAuth2ResourceOwnerPasswordAuthenticationProvider
     public UsernamePasswordAuthenticationToken buildToken(Map<String, Object> reqParameters) {
         String username = (String) reqParameters.get(OAuth2ParameterNames.USERNAME);
         String password = (String) reqParameters.get(OAuth2ParameterNames.PASSWORD);
-        return new UsernamePasswordAuthenticationToken(username, password);
+        // 构建前端对应解密AES 因子
+        AES aes = new AES(Mode.CFB, Padding.NoPadding,
+                new SecretKeySpec(KEY.getBytes(), AES),
+                new IvParameterSpec(KEY.getBytes())
+        );
+        String decryptPassword = aes.decryptStr(password);
+        return new UsernamePasswordAuthenticationToken(username, decryptPassword);
     }
 }
