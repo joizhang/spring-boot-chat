@@ -3,6 +3,7 @@ package com.joizhang.chat.auth.config;
 import com.joizhang.chat.auth.support.core.FormIdentityLoginConfigurer;
 import com.joizhang.chat.auth.support.core.MyDaoAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  * @author lengleng
  */
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
@@ -21,12 +23,12 @@ public class WebSecurityConfiguration {
      *
      * @param http security注入点
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests -> authorizeRequests
-                        .antMatchers("/token/*")
+                        .antMatchers("/auth/token/*")
                         .permitAll() // 开放自定义的部分端点
                         .anyRequest()
                         .authenticated()
@@ -47,12 +49,12 @@ public class WebSecurityConfiguration {
      * <a href="https://github.com/spring-projects/spring-security/issues/10938">...</a>
      *
      * @param http HttpSecurity
-     * @return
-     * @throws Exception
+     * @return SecurityFilterChain
+     * @throws Exception Exception
      */
     @Bean
     @Order(0)
-    SecurityFilterChain resources(HttpSecurity http) throws Exception {
+    SecurityFilterChain resourcesSecurityFilterChain(HttpSecurity http) throws Exception {
         http.requestMatchers(matchers -> matchers.antMatchers("/actuator/**", "/css/**", "/error"))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                 .requestCache()
