@@ -26,7 +26,8 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
-import org.springframework.security.oauth2.server.authorization.web.authentication.*;
+import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2AuthorizationCodeRequestAuthenticationConverter;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationConverter;
@@ -53,8 +54,8 @@ public class AuthorizationServerConfiguration {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
         // 使用 HttpSecurity 获取 OAuth 2.1 配置中的 OAuth2AuthorizationServerConfigurer 对象
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = http
-                .getConfigurer(OAuth2AuthorizationServerConfigurer.class);
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+                http.getConfigurer(OAuth2AuthorizationServerConfigurer.class);
 
         authorizationServerConfigurer
                 .tokenEndpoint(tokenEndpoint -> tokenEndpoint // 个性化认证授权端点
@@ -72,8 +73,8 @@ public class AuthorizationServerConfiguration {
         DefaultSecurityFilterChain securityFilterChain = authorizationServerConfigurer
                 .authorizationService(authorizationService)// redis存储token的实现
                 .authorizationServerSettings(
-                        AuthorizationServerSettings
-                                .builder()
+                        AuthorizationServerSettings.builder()
+                                .tokenEndpoint("/auth" + SecurityConstants.OAUTH_TOKEN_URL)
                                 .issuer(SecurityConstants.PROJECT_LICENSE)
                                 .build()
                 )
@@ -112,9 +113,6 @@ public class AuthorizationServerConfiguration {
                 Arrays.asList(
                         new OAuth2ResourceOwnerPasswordAuthenticationConverter(),
                         new OAuth2ResourceOwnerSmsAuthenticationConverter(),
-                        new OAuth2RefreshTokenAuthenticationConverter(),
-                        new OAuth2ClientCredentialsAuthenticationConverter(),
-                        new OAuth2AuthorizationCodeAuthenticationConverter(),
                         new OAuth2AuthorizationCodeRequestAuthenticationConverter()
                 )
         );
