@@ -14,10 +14,14 @@ spring:
     name: @artifactId@
   boot:
     admin:
-      context-path: /monitor
       client:
-        username: admin
-        password: admin
+        # Spring Boot Admin 服务端地址
+        url: "http://localhost:5001/"
+        instance:
+          metadata:
+            # 客户端端点信息的安全认证信息
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -78,10 +82,14 @@ security:
         - /v3/api-docs
         - /actuator/**
         - /code
-#    client:
-#      client-id: ENC(27v1agvAug87ANOVnbKdsw==)
-#      client-secret: ENC(VbnkopxrwgbFVKp+UxJ2pg==)
-#      scope: servers
+        - /auth/oauth2/token
+
+chat:
+  encode-key: 'thanks,pig4cloud'
+  ignore-clients:
+    - test
+    - client
+  api-logging: false
 
 # swagger 配置
 #swagger:
