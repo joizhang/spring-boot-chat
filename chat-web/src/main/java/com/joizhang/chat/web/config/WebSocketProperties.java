@@ -9,7 +9,7 @@ public class WebSocketProperties {
 
     public static final String PREFIX = "chat.websocket";
 
-    private String path = "/ws/info";
+    private String path = "/chat/ws/info";
 
     private String allowOrigins = "*";
 
