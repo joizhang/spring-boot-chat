@@ -55,11 +55,6 @@
 <!--        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>-->
 <!--    </appender>-->
 
-    <!--nacos 心跳 INFO 屏蔽-->
-    <logger name="com.alibaba.nacos" level="OFF">
-        <appender-ref ref="error"/>
-    </logger>
-
     <logger name="com.joizhang.chat.web" level="DEBUG">
         <appender-ref ref="console"/>
 <!--        <appender-ref ref="logstash"/>-->

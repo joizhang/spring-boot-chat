@@ -18,25 +18,10 @@
             <groupId>com.joizhang</groupId>
             <artifactId>chat-common-core</artifactId>
         </dependency>
-        <!--datasource 依赖-->
-        <dependency>
-            <groupId>com.joizhang</groupId>
-            <artifactId>chat-common-datasource</artifactId>
-        </dependency>
         <!--mybatis 依赖-->
         <dependency>
             <groupId>com.joizhang</groupId>
             <artifactId>chat-common-mybatis</artifactId>
-        </dependency>
-        <!--接口文档-->
-        <dependency>
-            <groupId>com.joizhang</groupId>
-            <artifactId>chat-common-swagger</artifactId>
-        </dependency>
-        <!--xss 过滤-->
-        <dependency>
-            <groupId>com.joizhang</groupId>
-            <artifactId>chat-common-xss</artifactId>
         </dependency>
         <!-- websocket -->
         <dependency>
@@ -58,6 +43,15 @@
             <artifactId>spring-security-oauth2-authorization-server</artifactId>
             <version>${spring.authorization.version}</version>
         </dependency>
+        <!-- orm 模块-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
         <!-- hutool -->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -71,6 +65,10 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-http</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
         <!-- excel 导入导出 https://github.com/pig-mesh/excel-spring-boot-starter -->
         <dependency>
             <groupId>com.pig4cloud.excel</groupId>
@@ -81,5 +79,32 @@
             <groupId>io.springboot.sms</groupId>
             <artifactId>aliyun-sms-spring-boot-starter</artifactId>
         </dependency>
+        <!-- netty -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>${netty.version}</version>
+            <classifier>osx-aarch_64</classifier>
+        </dependency>
+        <!--验证码 源码： https://github.com/pig-mesh/easy-captcha -->
+        <dependency>
+            <groupId>com.pig4cloud.plugin</groupId>
+            <artifactId>captcha-spring-boot-starter</artifactId>
+            <version>${captcha.version}</version>
+        </dependency>
+        <!--undertow容器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
