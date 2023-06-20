@@ -61,7 +61,6 @@ public class ChatCustomerController {
      *
      * @return 用户信息
      */
-    @Inner
     @GetMapping("/info/{username}")
     public R<CustomerInfoVo> infoByUsername(@PathVariable String username) {
         ChatCustomer customer = customerService

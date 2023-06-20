@@ -101,7 +101,6 @@ public class SysOauthClientDetailsController {
         return R.ok();
     }
 
-    @Inner
     @GetMapping("/getClientDetailsById/{clientId}")
     public R<SysOauthClientDetails> getClientDetailsById(@PathVariable String clientId) {
         LambdaQueryWrapper<SysOauthClientDetails> queryWrapper = Wrappers.<SysOauthClientDetails>lambdaQuery()
