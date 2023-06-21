@@ -3,6 +3,9 @@ package com.joizhang.chat.web.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.joizhang.chat.web.api.dto.ChatFriendRequestDTO;
 import com.joizhang.chat.web.api.entity.ChatFriend;
+import com.joizhang.chat.web.api.vo.FriendCustomVo;
+
+import java.util.List;
 
 /**
  * 好友关系 Service
@@ -23,4 +26,12 @@ public interface ChatFriendService extends IService<ChatFriend> {
      * @param chatFriendRequestDTO 实体
      */
     void saveAndSendToMQ(ChatFriendRequestDTO chatFriendRequestDTO);
+
+    /**
+     * 查询好友详细信息列表
+     *
+     * @param chatFriend 最新朋友的添加时间
+     */
+    List<FriendCustomVo> getCustomersByFriends(ChatFriend chatFriend);
+
 }

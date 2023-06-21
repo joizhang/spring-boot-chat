@@ -23,7 +23,7 @@ public interface ChatCustomerService extends IService<ChatCustomer> {
      * 通过查用户的全部信息
      *
      * @param customer 用户
-     * @return
+     * @return 用户的全部信息
      */
     CustomerInfoVo getCustomerInfo(ChatCustomer customer);
 

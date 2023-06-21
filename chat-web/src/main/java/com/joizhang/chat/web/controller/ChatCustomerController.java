@@ -1,6 +1,5 @@
 package com.joizhang.chat.web.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,7 +8,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.joizhang.chat.common.core.exception.ErrorCodes;
 import com.joizhang.chat.common.core.util.MsgUtils;
 import com.joizhang.chat.common.core.util.R;
-import com.joizhang.chat.common.security.annotation.Inner;
 import com.joizhang.chat.common.security.util.SecurityUtils;
 import com.joizhang.chat.web.api.entity.ChatCustomer;
 import com.joizhang.chat.web.api.vo.CustomerInfoVo;
@@ -21,7 +19,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,8 +79,8 @@ public class ChatCustomerController {
      * @param customer 用户相关查询查询
      * @return 用户列表
      */
-    @GetMapping("/page")
-    public R<IPage<CustomerVo>> search(Page<ChatCustomer> page, ChatCustomer customer) {
+    @GetMapping("/query")
+    public R<IPage<CustomerVo>> getCustomers(Page<ChatCustomer> page, ChatCustomer customer) {
         LambdaQueryWrapper<ChatCustomer> queryWrapper = Wrappers.<ChatCustomer>lambdaQuery()
                 .like(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername());
         Page<ChatCustomer> customerPage = customerService.page(page, queryWrapper);
@@ -94,22 +95,4 @@ public class ChatCustomerController {
         return R.ok(customerVoPage);
     }
 
-    /**
-     * 根据发信人ID集合查询发信人列表
-     *
-     * @param senderIds 发信人ID集合
-     * @return 发信人列表
-     */
-    @GetMapping("/senders")
-    public R<List<CustomerVo>> getSenders(@RequestParam List<Long> senderIds) {
-        LambdaQueryWrapper<ChatCustomer> queryWrapper = Wrappers.<ChatCustomer>lambdaQuery()
-                .in(CollectionUtil.isNotEmpty(senderIds), ChatCustomer::getId, senderIds);
-        List<ChatCustomer> chatCustomers = customerService.list(queryWrapper);
-        List<CustomerVo> result = chatCustomers.stream().map((c) -> {
-            CustomerVo customerVo = new CustomerVo();
-            BeanUtils.copyProperties(c, customerVo);
-            return customerVo;
-        }).collect(Collectors.toList());
-        return R.ok(result);
-    }
 }

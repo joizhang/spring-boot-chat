@@ -45,7 +45,6 @@
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <hutool.version>5.8.18</hutool.version>
         <mica.version>2.7.10</mica.version>
-        <spring-boot.version>2.7.10</spring-boot.version>
     </properties>
 
     <dependencyManagement>

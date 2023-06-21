@@ -46,7 +46,6 @@ public class ImageCodeController {
                 )
         );
         // 转换流信息写出
-//        FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         captcha.out(response.getOutputStream());
     }
 }

@@ -7,6 +7,8 @@ import com.joizhang.chat.common.security.util.SecurityUtils;
 import com.joizhang.chat.web.api.constant.FriendRequestStatus;
 import com.joizhang.chat.web.api.dto.ChatFriendRequestDTO;
 import com.joizhang.chat.web.api.entity.ChatFriend;
+import com.joizhang.chat.web.api.vo.FriendCustomVo;
+import com.joizhang.chat.web.config.ChatConfigProperties;
 import com.joizhang.chat.web.service.ChatFriendService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,12 +28,15 @@ public class ChatFriendController {
 
     private final ChatFriendService friendService;
 
+    private final ChatConfigProperties chatConfig;
+
     /**
      * 朋友关系是否存在
      *
+     * @param chatFriend 好友
      * @return 朋友关系是否存在
      */
-    @GetMapping("/exist")
+    @GetMapping
     public R<Boolean> exist(ChatFriend chatFriend) {
         return R.ok(friendService.exist(chatFriend));
     }
@@ -41,8 +47,8 @@ public class ChatFriendController {
      * @param friendRequestDTO 参数
      * @return 请求是否发送成功
      */
-    @PostMapping("/request")
-    public R<String> save(@Valid @RequestBody ChatFriendRequestDTO friendRequestDTO) {
+    @PostMapping
+    public R<String> addFriendRequest(@Valid @RequestBody ChatFriendRequestDTO friendRequestDTO) {
         Long userId = SecurityUtils.getUser().getId();
         // 验证身份
         if (!userId.equals(friendRequestDTO.getUserId())) {
@@ -63,7 +69,39 @@ public class ChatFriendController {
                 return R.failed("You are already friends.");
             }
         }
+        // 朋友上限为500
+        long count = friendService.count(
+                Wrappers.<ChatFriend>lambdaQuery()
+                        .eq(ChatFriend::getUserId, friendRequestDTO.getUserId())
+                        .eq(ChatFriend::getRequestStatus, FriendRequestStatus.ACCEPTED.getStatus())
+        );
+        if (count >= chatConfig.getFriendLimit()) {
+            return R.failed("You have reached the limit of friends.");
+        }
         friendService.saveAndSendToMQ(friendRequestDTO);
         return R.ok();
+    }
+
+    /**
+     * 删除好友
+     *
+     * @param chatFriend 好友
+     * @return 是否成功
+     */
+    @DeleteMapping
+    public R<Boolean> deleteFriend(ChatFriend chatFriend) {
+        return R.ok(friendService.removeById(chatFriend));
+    }
+
+
+    /**
+     * 查询好友详细信息列表
+     *
+     * @param chatFriend 最新朋友的添加时间
+     * @return 好友详细信息列表
+     */
+    @GetMapping("/customers")
+    public R<List<FriendCustomVo>> getCustomersByFriends(ChatFriend chatFriend) {
+        return R.ok(friendService.getCustomersByFriends(chatFriend));
     }
 }
