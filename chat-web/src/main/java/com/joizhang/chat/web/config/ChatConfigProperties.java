@@ -27,4 +27,9 @@ public class ChatConfigProperties {
      */
     private boolean apiLogging;
 
+    /**
+     * 好友上限
+     */
+    private long friendLimit = 500;
+
 }
