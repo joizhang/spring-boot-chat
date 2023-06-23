@@ -4,28 +4,34 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.joizhang.chat.common.mybatis.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * 聊天群成员
+ * 聊天群
  */
 @Data
-public class ChatGroupMember {
+@EqualsAndHashCode(callSuper = true)
+public class ChatCommunity extends BaseEntity {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @Schema(description = "主键id")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
-    @NotNull(message = "聊天群的id不能为空")
-    @Schema(description = "聊天群的id")
-    private Long groupId;
+    @NotNull(message = "聊天群的名称不能为空")
+    @Schema(title = "聊天群的名称")
+    private String groupName;
 
-    @NotNull(message = "用户id不能为空")
-    @Schema(description = "用户id")
-    private Long userId;
+    @NotNull(message = "管理员ID不能为空")
+    @Schema(title = "管理员ID")
+    private Long adminId;
+
+    @Schema(title = "公告")
+    private String announcement;
 
 }
