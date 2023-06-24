@@ -2,6 +2,7 @@ package com.joizhang.chat.web.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +45,7 @@ public class ChatCustomerController {
      * @return 用户信息
      */
     @GetMapping(value = {"/info"})
-    public R<CustomerInfoVo> infoByUsername() {
+    public R<CustomerInfoVo> getCustomerInfo() {
         String username = SecurityUtils.getUser().getUsername();
         ChatCustomer customer = customerService
                 .getOne(Wrappers.<ChatCustomer>query().lambda().eq(ChatCustomer::getUsername, username));
@@ -80,7 +78,7 @@ public class ChatCustomerController {
      * @return 用户列表
      */
     @GetMapping("/query")
-    public R<IPage<CustomerVo>> getCustomers(Page<ChatCustomer> page, ChatCustomer customer) {
+    public R<IPage<CustomerVo>> queryCustomers(Page<ChatCustomer> page, ChatCustomer customer) {
         LambdaQueryWrapper<ChatCustomer> queryWrapper = Wrappers.<ChatCustomer>lambdaQuery()
                 .like(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername());
         Page<ChatCustomer> customerPage = customerService.page(page, queryWrapper);
@@ -93,6 +91,20 @@ public class ChatCustomerController {
                 customerPage.getCurrent(), customerPage.getSize(), customerPage.getTotal());
         customerVoPage.setRecords(records);
         return R.ok(customerVoPage);
+    }
+
+    @PutMapping("/info")
+    public R<Boolean> updateCustomer(ChatCustomer customer) {
+        Long userId = SecurityUtils.getUser().getId();
+        if (!userId.equals(customer.getId())) {
+            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
+        }
+        LambdaUpdateWrapper<ChatCustomer> updateWrapper = Wrappers.<ChatCustomer>lambdaUpdate()
+                .eq(ChatCustomer::getId, customer.getId())
+                .set(StrUtil.isNotBlank(customer.getAvatar()), ChatCustomer::getAvatar, customer.getAvatar())
+                .set(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername())
+                .set(StrUtil.isNotBlank(customer.getPhone()), ChatCustomer::getPhone, customer.getPhone());
+        return R.ok(customerService.update(updateWrapper));
     }
 
 }

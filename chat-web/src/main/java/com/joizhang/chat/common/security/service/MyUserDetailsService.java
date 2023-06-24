@@ -67,7 +67,7 @@ public interface MyUserDetailsService extends UserDetailsService, Ordered {
         SysUser user = info.getSysUser();
 
         // 构造security用户
-        return new com.joizhang.chat.common.security.service.MyUser(
+        return new MyUser(
                 user.getUserId(),
                 user.getDeptId(),
                 user.getUsername(),
