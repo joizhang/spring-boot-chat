@@ -2,6 +2,7 @@ package com.joizhang.chat.web.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.joizhang.chat.common.core.util.MsgUtils;
 import com.joizhang.chat.common.core.util.R;
 import com.joizhang.chat.common.security.util.SecurityUtils;
 import com.joizhang.chat.web.api.constant.FriendRequestStatus;
@@ -38,6 +39,10 @@ public class ChatFriendController {
      */
     @GetMapping
     public R<Boolean> exist(ChatFriend chatFriend) {
+        Long userId = SecurityUtils.getUser().getId();
+        if (!userId.equals(chatFriend.getUserId())) {
+            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
+        }
         return R.ok(friendService.exist(chatFriend));
     }
 
@@ -50,9 +55,8 @@ public class ChatFriendController {
     @PostMapping
     public R<String> addFriendRequest(@Valid @RequestBody ChatFriendRequestDTO friendRequestDTO) {
         Long userId = SecurityUtils.getUser().getId();
-        // 验证身份
         if (!userId.equals(friendRequestDTO.getUserId())) {
-            return R.failed("Illegal identity");
+            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
         }
         ChatFriend friend = friendService.getOne(
                 Wrappers.<ChatFriend>lambdaQuery()
@@ -62,21 +66,21 @@ public class ChatFriendController {
         if (ObjectUtil.isNotNull(friend)) {
             // 判断是否有待处理的好友请求
             if (FriendRequestStatus.PENDING.getStatus().equals(friend.getRequestStatus())) {
-                return R.failed("Friend Request cannot be sent repeatedly.");
+                return R.failed("Friend request cannot be sent repeatedly");
             }
             // 判断是否已经是朋友
             if (FriendRequestStatus.ACCEPTED.getStatus().equals(friend.getRequestStatus())) {
-                return R.failed("You are already friends.");
+                return R.failed("You are already friends");
             }
         }
-        // 朋友上限为500
+        // 不能超过朋友上限
         long count = friendService.count(
                 Wrappers.<ChatFriend>lambdaQuery()
                         .eq(ChatFriend::getUserId, friendRequestDTO.getUserId())
                         .eq(ChatFriend::getRequestStatus, FriendRequestStatus.ACCEPTED.getStatus())
         );
         if (count >= chatConfig.getFriendLimit()) {
-            return R.failed("You have reached the limit of friends.");
+            return R.failed("You have reached the limit of friends");
         }
         friendService.saveAndSendToMQ(friendRequestDTO);
         return R.ok();
@@ -90,6 +94,16 @@ public class ChatFriendController {
      */
     @DeleteMapping
     public R<Boolean> deleteFriend(ChatFriend chatFriend) {
+        Long userId = SecurityUtils.getUser().getId();
+        if (!userId.equals(chatFriend.getUserId())) {
+            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
+        }
+        chatFriend.setUserId(userId);
+        chatFriend.setRequestStatus(FriendRequestStatus.ACCEPTED.getStatus());
+        boolean exist = friendService.exist(chatFriend);
+        if (!exist) {
+            return R.failed("Cannot delete a friend that does not exist");
+        }
         return R.ok(friendService.removeById(chatFriend));
     }
 
@@ -102,6 +116,10 @@ public class ChatFriendController {
      */
     @GetMapping("/customers")
     public R<List<FriendCustomVo>> getCustomersByFriends(ChatFriend chatFriend) {
+        Long userId = SecurityUtils.getUser().getId();
+        if (!userId.equals(chatFriend.getUserId())) {
+            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
+        }
         return R.ok(friendService.getCustomersByFriends(chatFriend));
     }
 }
