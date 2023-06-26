@@ -25,13 +25,16 @@ public class ChatCommunity extends BaseEntity {
 
     @NotNull(message = "聊天群的名称不能为空")
     @Schema(title = "聊天群的名称")
-    private String groupName;
+    private String communityName;
+
+    @Schema(description = "群头像")
+    private String avatar;
+
+    @Schema(title = "群描述")
+    private String description;
 
     @NotNull(message = "管理员ID不能为空")
     @Schema(title = "管理员ID")
     private Long adminId;
-
-    @Schema(title = "公告")
-    private String announcement;
 
 }

@@ -74,9 +74,10 @@ CREATE TABLE `chat_friend` (
 DROP TABLE IF EXISTS `chat_community`;
 CREATE TABLE `chat_community` (
     `id` bigint NOT NULL,
-    `group_name` varchar(64) NOT NULL COMMENT '群聊名',
+    `community_name` varchar(64) NOT NULL COMMENT '群聊名',
+    `avatar` varchar(255) DEFAULT NULL COMMENT '群头像',
+    `description` varchar(1000) NOT NULL COMMENT '群描述',
     `admin_id` bigint NOT NULL COMMENT '管理员ID',
-    `announcement` varchar(1000) NOT NULL COMMENT '通告',
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
     `update_time` datetime DEFAULT NULL COMMENT '修改时间',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
@@ -90,11 +91,11 @@ CREATE TABLE `chat_community` (
 DROP TABLE IF EXISTS `chat_community_member`;
 CREATE TABLE `chat_community_member` (
     `id` bigint NOT NULL,
-    `group_id` bigint NOT NULL COMMENT '群聊id',
+    `community_id` bigint NOT NULL COMMENT '群聊id',
     `member_id` bigint NOT NULL COMMENT '用户id',
-    `nickname` varchar(64) NOT NULL COMMENT '群内昵称',
+    `nickname` varchar(64) DEFAULT NULL COMMENT '群内昵称',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `group_member_idx1_group_user` (`group_id`, `member_id`)
+    UNIQUE KEY `community_member_idx1_community_member` (`community_id`, `member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='聊天群成员';
 
 -- ----------------------------

@@ -22,13 +22,13 @@ public class ChatCommunityMember {
 
     @NotNull(message = "聊天群的ID不能为空")
     @Schema(description = "聊天群的ID")
-    private Long groupId;
+    private Long communityId;
 
     @NotNull(message = "成员ID不能为空")
     @Schema(description = "成员ID")
     private Long memberId;
 
     @Schema(description = "群内昵称")
-    private String nickName;
+    private String nickname;
 
 }

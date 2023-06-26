@@ -9,6 +9,7 @@ import com.joizhang.chat.web.service.ChatCommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,13 +17,14 @@ import org.springframework.stereotype.Service;
 public class ChatCommunityServiceImpl extends ServiceImpl<ChatCommunityMapper, ChatCommunity>
         implements ChatCommunityService {
 
-    private ChatCommunityMemberService communityMemberService;
+    private final ChatCommunityMemberService communityMemberService;
 
+    @Transactional
     @Override
     public Boolean saveGroupAndMembers(ChatCommunity chatCommunity) {
         this.save(chatCommunity);
         ChatCommunityMember chatCommunityMember = new ChatCommunityMember();
-        chatCommunityMember.setGroupId(chatCommunity.getId());
+        chatCommunityMember.setCommunityId(chatCommunity.getId());
         chatCommunityMember.setMemberId(chatCommunity.getAdminId());
         return communityMemberService.save(chatCommunityMember);
     }
