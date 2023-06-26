@@ -78,9 +78,9 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
     }
 
     @Override
-    public List<FriendCustomVo> getCustomersByFriends(ChatFriend chatFriendParam) {
+    public List<FriendCustomVo> getCustomersByAcceptFriends(ChatFriend chatFriendParam) {
         Long userId = SecurityUtils.getUser().getId();
-        // 查询当前用户好友
+        // 查询当前用户好友IDs
         LambdaQueryWrapper<ChatFriend> queryWrapper = Wrappers.<ChatFriend>lambdaQuery()
                 .eq(ChatFriend::getUserId, userId)
                 .eq(ChatFriend::getRequestStatus, FriendRequestStatus.ACCEPTED.getStatus())
@@ -91,23 +91,67 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
                 );
         List<ChatFriend> chatFriends = this.list(queryWrapper);
         List<Long> friendIds = chatFriends.stream()
-                .map(ChatFriend::getFriendId).collect(Collectors.toList());
+                .map(ChatFriend::getFriendId)
+                .collect(Collectors.toList());
         if (CollectionUtil.isEmpty(friendIds)) {
             return Collections.emptyList();
         }
-        // 查询好友的详细信息
+
         Map<Long, ChatFriend> chatFriendMap = new HashMap<>();
         chatFriends.forEach(chatFriend -> chatFriendMap.put(chatFriend.getFriendId(), chatFriend));
+        // 查询好友的详细信息
         LambdaQueryWrapper<ChatCustomer> queryWrapper2 = Wrappers.<ChatCustomer>lambdaQuery()
                 .in(ChatCustomer::getId, friendIds);
         List<ChatCustomer> chatCustomers = customerService.list(queryWrapper2);
+
         // 转换
-        return chatCustomers.stream().map((customer) -> {
-            FriendCustomVo friendCustomVo = new FriendCustomVo();
-            BeanUtils.copyProperties(customer, friendCustomVo);
-            ChatFriend chatFriend = chatFriendMap.get(customer.getId());
-            friendCustomVo.setCreateTime(chatFriend.getCreateTime());
-            return friendCustomVo;
-        }).collect(Collectors.toList());
+        return chatCustomers.stream()
+                .map((customer) -> {
+                    FriendCustomVo friendCustomVo = new FriendCustomVo();
+                    BeanUtils.copyProperties(customer, friendCustomVo);
+                    ChatFriend chatFriend = chatFriendMap.get(customer.getId());
+                    friendCustomVo.setCreateTime(chatFriend.getCreateTime());
+                    return friendCustomVo;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FriendCustomVo> getCustomersByPendingFriends(ChatFriend chatFriendParam) {
+        Long userId = SecurityUtils.getUser().getId();
+        // 查询当前用户待处理请求的好友IDs
+        LambdaQueryWrapper<ChatFriend> queryWrapper = Wrappers.<ChatFriend>lambdaQuery()
+                .eq(ChatFriend::getFriendId, userId)
+                .eq(ChatFriend::getRequestStatus, FriendRequestStatus.PENDING.getStatus())
+                .gt(
+                        ObjectUtil.isNotNull(chatFriendParam.getCreateTime()),
+                        ChatFriend::getCreateTime,
+                        chatFriendParam.getCreateTime()
+                );
+        List<ChatFriend> chatFriends = this.list(queryWrapper);
+        List<Long> friendIds = chatFriends.stream()
+                .map(ChatFriend::getUserId)
+                .collect(Collectors.toList());
+        if (CollectionUtil.isEmpty(friendIds)) {
+            return Collections.emptyList();
+        }
+
+        // 查询好友的详细信息
+        Map<Long, ChatFriend> chatFriendMap = new HashMap<>();
+        chatFriends.forEach(chatFriend -> chatFriendMap.put(chatFriend.getUserId(), chatFriend));
+        LambdaQueryWrapper<ChatCustomer> queryWrapper2 = Wrappers.<ChatCustomer>lambdaQuery()
+                .in(ChatCustomer::getId, friendIds);
+        List<ChatCustomer> chatCustomers = customerService.list(queryWrapper2);
+
+        // 转换
+        return chatCustomers.stream()
+                .map((customer) -> {
+                    FriendCustomVo friendCustomVo = new FriendCustomVo();
+                    BeanUtils.copyProperties(customer, friendCustomVo);
+                    ChatFriend chatFriend = chatFriendMap.get(customer.getId());
+                    friendCustomVo.setCreateTime(chatFriend.getCreateTime());
+                    return friendCustomVo;
+                })
+                .collect(Collectors.toList());
     }
 }

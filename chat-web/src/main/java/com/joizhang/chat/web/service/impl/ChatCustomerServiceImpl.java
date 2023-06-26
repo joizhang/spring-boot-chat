@@ -18,7 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +29,6 @@ public class ChatCustomerServiceImpl extends ServiceImpl<ChatCustomerMapper, Cha
     private final AppService appService;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Boolean saveUser(CustomerDTO customerDTO) {
         ChatCustomer customer = new ChatCustomer();
         BeanUtils.copyProperties(customerDTO, customer);
@@ -55,8 +53,10 @@ public class ChatCustomerServiceImpl extends ServiceImpl<ChatCustomerMapper, Cha
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_APP_SMS_ERROR));
         }
         // 判断用户名是否存在
-        ChatCustomer customer =
-                this.getOne(Wrappers.<ChatCustomer>lambdaQuery().eq(ChatCustomer::getUsername, customerDTO.getUsername()));
+        ChatCustomer customer = this.getOne(
+                Wrappers.<ChatCustomer>lambdaQuery()
+                        .eq(ChatCustomer::getUsername, customerDTO.getUsername())
+        );
         if (customer != null) {
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_USERNAME_EXISTING, customerDTO.getUsername()));
         }

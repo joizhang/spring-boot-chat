@@ -32,6 +32,13 @@ public interface ChatFriendService extends IService<ChatFriend> {
      *
      * @param chatFriend 最新朋友的添加时间
      */
-    List<FriendCustomVo> getCustomersByFriends(ChatFriend chatFriend);
+    List<FriendCustomVo> getCustomersByAcceptFriends(ChatFriend chatFriend);
+
+    /**
+     * 查询待处理好友详细信息列表
+     *
+     * @param chatFriend 最新朋友的添加时间
+     */
+    List<FriendCustomVo> getCustomersByPendingFriends(ChatFriend chatFriend);
 
 }

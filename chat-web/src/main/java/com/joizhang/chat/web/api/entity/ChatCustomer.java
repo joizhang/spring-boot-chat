@@ -33,7 +33,6 @@ public class ChatCustomer extends BaseEntity {
 
     @NotNull(message = "密码不能为空")
     @Size(min = 3, max = 20, message = "密码长度为3-20之间")
-    @JsonIgnore
     @Schema(description = "密码")
     private String password;
 

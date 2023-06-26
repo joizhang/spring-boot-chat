@@ -120,6 +120,12 @@ public class ChatFriendController {
         if (!userId.equals(chatFriend.getUserId())) {
             return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
         }
-        return R.ok(friendService.getCustomersByFriends(chatFriend));
+        if (FriendRequestStatus.ACCEPTED.getStatus().equals(chatFriend.getRequestStatus())) {
+            return R.ok(friendService.getCustomersByAcceptFriends(chatFriend));
+        } else if (FriendRequestStatus.PENDING.getStatus().equals(chatFriend.getRequestStatus())) {
+            return R.ok(friendService.getCustomersByPendingFriends(chatFriend));
+        } else {
+            throw new IllegalArgumentException("Illegal friend request status");
+        }
     }
 }
