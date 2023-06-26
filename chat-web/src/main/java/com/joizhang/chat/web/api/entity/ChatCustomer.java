@@ -41,10 +41,6 @@ public class ChatCustomer extends BaseEntity {
     @Schema(description = "随机盐")
     private String salt;
 
-    @JsonIgnore
-    @Schema(description = "锁定标记")
-    private String lockFlag;
-
     @Schema(description = "手机号")
     private String phone;
 
@@ -53,6 +49,10 @@ public class ChatCustomer extends BaseEntity {
 
     @Schema(description = "简介")
     private String about;
+
+    @JsonIgnore
+    @Schema(description = "锁定标记")
+    private String lockFlag;
 
     /**
      * 0-正常，1-删除

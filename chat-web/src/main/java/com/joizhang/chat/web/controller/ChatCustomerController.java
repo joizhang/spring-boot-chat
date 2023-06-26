@@ -94,7 +94,7 @@ public class ChatCustomerController {
     }
 
     @PutMapping("/info")
-    public R<Boolean> updateCustomer(ChatCustomer customer) {
+    public R<Boolean> updateCustomer(@RequestBody ChatCustomer customer) {
         Long userId = SecurityUtils.getUser().getId();
         if (!userId.equals(customer.getId())) {
             return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
@@ -103,7 +103,8 @@ public class ChatCustomerController {
                 .eq(ChatCustomer::getId, customer.getId())
                 .set(StrUtil.isNotBlank(customer.getAvatar()), ChatCustomer::getAvatar, customer.getAvatar())
                 .set(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername())
-                .set(StrUtil.isNotBlank(customer.getPhone()), ChatCustomer::getPhone, customer.getPhone());
+                .set(StrUtil.isNotBlank(customer.getPhone()), ChatCustomer::getPhone, customer.getPhone())
+                .set(StrUtil.isNotBlank(customer.getAbout()), ChatCustomer::getAbout, customer.getAbout());
         return R.ok(customerService.update(updateWrapper));
     }
 
