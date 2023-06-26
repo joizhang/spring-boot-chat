@@ -2,7 +2,6 @@ package com.joizhang.chat.common;
 
 import com.joizhang.chat.common.core.util.R;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

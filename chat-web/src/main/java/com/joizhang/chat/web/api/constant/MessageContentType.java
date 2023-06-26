@@ -26,6 +26,11 @@ public enum MessageContentType {
     FRIEND_REQ(5, "Friend request"),
 
     ACK(6, "Message ACK"),
+
+    /**
+     * 提示文本，居中显示
+     */
+    TOOLTIP(7, "Tooltip"),
     ;
 
     private final Integer type;
