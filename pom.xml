@@ -23,8 +23,8 @@
 
         <spring-cloud-chat.version>1.0-SNAPSHOT</spring-cloud-chat.version>
 
-        <spring-boot.version>2.7.10</spring-boot.version>
-        <spring.authorization.version>0.4.1</spring.authorization.version>
+        <spring-boot.version>2.7.12</spring-boot.version>
+        <spring.authorization.version>0.4.2</spring.authorization.version>
         <spring-boot-admin.version>2.7.10</spring-boot-admin.version>
 
         <jasypt.version>3.0.5</jasypt.version>
@@ -44,7 +44,6 @@
         <mysql.version>8.0.32</mysql.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <hutool.version>5.8.18</hutool.version>
-        <mica.version>2.7.10</mica.version>
     </properties>
 
     <dependencyManagement>
@@ -78,14 +77,6 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-bom</artifactId>
                 <version>${hutool.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!--mica bom 工具类-->
-            <dependency>
-                <groupId>net.dreamlu</groupId>
-                <artifactId>mica-bom</artifactId>
-                <version>${mica.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -193,7 +184,7 @@
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
-            <version>${spring-boot.version}</version>
+            <version>${spring-boot-admin.version}</version>
         </dependency>
         <!--Lombok-->
         <dependency>
