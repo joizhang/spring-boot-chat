@@ -47,7 +47,6 @@ public class AppController {
      * @param phone 手机号
      * @return 用户信息
      */
-    @Inner
     @GetMapping("/info/{phone}")
     public R<CustomerInfoVo> infoByMobile(@PathVariable String phone) {
         ChatCustomer customer = customerService
