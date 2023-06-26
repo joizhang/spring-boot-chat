@@ -32,4 +32,8 @@ public class ChatConfigProperties {
      */
     private long friendLimit = 500;
 
+    /**
+     * 是否开启注册
+     */
+    private boolean register = true;
 }

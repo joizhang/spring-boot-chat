@@ -11,13 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
- * 客户端注册功能 register.customer = false
+ * 客户端注册功能 chat.register = true
  */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/chat/svc/register")
-@ConditionalOnProperty(name = "register.customer", matchIfMissing = true)
+@ConditionalOnProperty(name = "chat.register", matchIfMissing = true)
 public class ChatCustomerRegisterController {
 
     private final ChatCustomerService customerService;
@@ -30,7 +32,7 @@ public class ChatCustomerRegisterController {
      */
     @Inner(value = false)
     @PostMapping("/customer")
-    public R<Boolean> registerUser(@RequestBody CustomerDTO customerDTO) {
+    public R<Boolean> registerUser(@Valid @RequestBody CustomerDTO customerDTO) {
         return customerService.registerUser(customerDTO);
     }
 }
