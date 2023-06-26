@@ -36,7 +36,7 @@ public class GlobalBizExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public R<String> handleGlobalException(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
-        return R.failed(e.getLocalizedMessage());
+        return R.failed(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
 
     /**
