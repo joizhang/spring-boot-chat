@@ -10,7 +10,6 @@ services:
     hostname: chat2-mysql
     ports:
       - "3306:3306"
-    restart: always
 
   chat2-redis:
     image: redis:alpine
@@ -18,7 +17,6 @@ services:
     hostname: chat2-redis
     ports:
       - "6379:6379"
-    restart: always
 
   chat2-rabbitmq:
     image: rabbitmq:3.11-management
