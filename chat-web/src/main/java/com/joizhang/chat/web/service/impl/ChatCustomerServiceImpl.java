@@ -1,16 +1,14 @@
 package com.joizhang.chat.web.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.joizhang.chat.common.core.constant.CommonConstants;
-import com.joizhang.chat.common.core.exception.ErrorCodes;
-import com.joizhang.chat.common.core.util.MsgUtils;
-import com.joizhang.chat.common.core.util.R;
 import com.joizhang.chat.web.api.dto.CustomerDTO;
 import com.joizhang.chat.web.api.entity.ChatCustomer;
 import com.joizhang.chat.web.api.vo.CustomerInfoVo;
 import com.joizhang.chat.web.mapper.ChatCustomerMapper;
-import com.joizhang.chat.web.service.AppService;
 import com.joizhang.chat.web.service.ChatCustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +24,6 @@ public class ChatCustomerServiceImpl extends ServiceImpl<ChatCustomerMapper, Cha
         implements ChatCustomerService {
 
     private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
-
-    private final AppService appService;
 
     @Override
     public Boolean saveUser(CustomerDTO customerDTO) {
@@ -48,20 +44,14 @@ public class ChatCustomerServiceImpl extends ServiceImpl<ChatCustomerMapper, Cha
     }
 
     @Override
-    public R<Boolean> registerUser(CustomerDTO customerDTO) {
-        // 校验验证码
-        if (!appService.check(customerDTO.getPhone(), customerDTO.getCode())) {
-            return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_APP_SMS_ERROR));
-        }
-        // 判断用户名是否存在
-        ChatCustomer customer = this.getOne(
-                Wrappers.<ChatCustomer>lambdaQuery()
-                        .eq(ChatCustomer::getUsername, customerDTO.getUsername())
-        );
-        if (customer != null) {
-            return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_USERNAME_EXISTING, customerDTO.getUsername()));
-        }
-        return R.ok(saveUser(customerDTO));
+    public Boolean updateCustomer(ChatCustomer customer) {
+        LambdaUpdateWrapper<ChatCustomer> updateWrapper = Wrappers.<ChatCustomer>lambdaUpdate()
+                .eq(ChatCustomer::getId, customer.getId())
+                .set(StrUtil.isNotBlank(customer.getAvatar()), ChatCustomer::getAvatar, customer.getAvatar())
+                .set(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername())
+                .set(StrUtil.isNotBlank(customer.getPhone()), ChatCustomer::getPhone, customer.getPhone())
+                .set(StrUtil.isNotBlank(customer.getAbout()), ChatCustomer::getAbout, customer.getAbout());
+        return this.update(updateWrapper);
     }
 
 }
