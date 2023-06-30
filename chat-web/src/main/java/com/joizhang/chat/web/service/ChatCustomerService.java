@@ -26,4 +26,11 @@ public interface ChatCustomerService extends IService<ChatCustomer> {
      */
     CustomerInfoVo getCustomerInfo(ChatCustomer customer);
 
+
+    /**
+     * 更新用户信息
+     * @param customer 用户信息
+     * @return success/false
+     */
+    Boolean updateCustomer(ChatCustomer customer);
 }

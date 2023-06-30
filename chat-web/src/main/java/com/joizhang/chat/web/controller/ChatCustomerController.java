@@ -2,7 +2,6 @@ package com.joizhang.chat.web.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,7 +33,7 @@ public class ChatCustomerController {
 
     private final ChatCustomerService customerService;
 
-    @GetMapping("hello")
+    @GetMapping("/hello")
     public ResponseEntity<String> index() {
         return ResponseEntity.ok("hello");
     }
@@ -44,11 +43,12 @@ public class ChatCustomerController {
      *
      * @return 用户信息
      */
-    @GetMapping(value = {"/info"})
+    @GetMapping
     public R<CustomerInfoVo> getCustomerInfo() {
         String username = SecurityUtils.getUser().getUsername();
-        ChatCustomer customer = customerService
-                .getOne(Wrappers.<ChatCustomer>query().lambda().eq(ChatCustomer::getUsername, username));
+        ChatCustomer customer = customerService.getOne(
+                Wrappers.<ChatCustomer>lambdaQuery().eq(ChatCustomer::getUsername, username)
+        );
         if (customer == null) {
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_QUERY_ERROR));
         }
@@ -60,14 +60,29 @@ public class ChatCustomerController {
      *
      * @return 用户信息
      */
-    @GetMapping("/info/{username}")
+    @GetMapping("/{username}")
     public R<CustomerInfoVo> infoByUsername(@PathVariable String username) {
-        ChatCustomer customer = customerService
-                .getOne(Wrappers.<ChatCustomer>query().lambda().eq(ChatCustomer::getUsername, username));
+        ChatCustomer customer = customerService.getOne(
+                Wrappers.<ChatCustomer>lambdaQuery().eq(ChatCustomer::getUsername, username)
+        );
         if (customer == null) {
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_USERINFO_EMPTY, username));
         }
         return R.ok(customerService.getCustomerInfo(customer));
+    }
+
+    /**
+     * 更新用户信息
+     * @param customer 用户信息
+     * @return success/false
+     */
+    @PutMapping
+    public R<Boolean> updateCustomer(@RequestBody ChatCustomer customer) {
+        Long userId = SecurityUtils.getUser().getId();
+        if (!userId.equals(customer.getId())) {
+            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
+        }
+        return R.ok(customerService.updateCustomer(customer));
     }
 
     /**
@@ -92,20 +107,4 @@ public class ChatCustomerController {
         customerVoPage.setRecords(records);
         return R.ok(customerVoPage);
     }
-
-    @PutMapping("/info")
-    public R<Boolean> updateCustomer(@RequestBody ChatCustomer customer) {
-        Long userId = SecurityUtils.getUser().getId();
-        if (!userId.equals(customer.getId())) {
-            return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
-        }
-        LambdaUpdateWrapper<ChatCustomer> updateWrapper = Wrappers.<ChatCustomer>lambdaUpdate()
-                .eq(ChatCustomer::getId, customer.getId())
-                .set(StrUtil.isNotBlank(customer.getAvatar()), ChatCustomer::getAvatar, customer.getAvatar())
-                .set(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername())
-                .set(StrUtil.isNotBlank(customer.getPhone()), ChatCustomer::getPhone, customer.getPhone())
-                .set(StrUtil.isNotBlank(customer.getAbout()), ChatCustomer::getAbout, customer.getAbout());
-        return R.ok(customerService.update(updateWrapper));
-    }
-
 }
