@@ -35,7 +35,6 @@ public class ImageCodeController {
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
         String result = captcha.text();
         // 保存验证码信息
-
         Optional<String> randomStr = Optional.of(request.getParameter("randomStr"));
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         randomStr.ifPresent(s ->
