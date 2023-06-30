@@ -30,7 +30,8 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatMessage> implements ChatMessageService {
+public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatMessage>
+        implements ChatMessageService {
 
     private final RabbitTemplate rabbitTemplate;
 

@@ -22,7 +22,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ChatCustomerServiceImpl extends ServiceImpl<ChatCustomerMapper, ChatCustomer> implements ChatCustomerService {
+public class ChatCustomerServiceImpl extends ServiceImpl<ChatCustomerMapper, ChatCustomer>
+        implements ChatCustomerService {
 
     private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 

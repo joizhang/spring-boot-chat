@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFriend> implements ChatFriendService {
+public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFriend>
+        implements ChatFriendService {
 
     private final ChatMessageService messageService;
 
