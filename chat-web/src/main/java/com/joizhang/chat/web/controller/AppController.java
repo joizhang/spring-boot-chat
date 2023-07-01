@@ -49,8 +49,10 @@ public class AppController {
      */
     @GetMapping("/info/{phone}")
     public R<CustomerInfoVo> infoByMobile(@PathVariable String phone) {
-        ChatCustomer customer = customerService
-                .getOne(Wrappers.<ChatCustomer>query().lambda().eq(ChatCustomer::getPhone, phone));
+        ChatCustomer customer = customerService.getOne(
+                Wrappers.<ChatCustomer>lambdaQuery()
+                        .eq(ChatCustomer::getPhone, phone)
+        );
         if (customer == null) {
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_USERINFO_EMPTY, phone));
         }
