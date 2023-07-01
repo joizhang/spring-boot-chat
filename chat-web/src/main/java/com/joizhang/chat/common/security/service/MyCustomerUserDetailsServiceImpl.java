@@ -57,7 +57,7 @@ public class MyCustomerUserDetailsServiceImpl implements MyUserDetailsService {
         if (ObjectUtil.isNotNull(cache) && ObjectUtil.isNotNull(cache.get(username))) {
             return (MyUser) Objects.requireNonNull(cache.get(username)).get();
         }
-        R<CustomerInfoVo> result = remoteChatCustomerService.infoByUsername(username);
+        R<CustomerInfoVo> result = remoteChatCustomerService.getCustomerInfoByUsername(username);
         CustomerInfoVo customerInfoVo = RetOps.of(result)
                 .assertSuccess(r -> new RuntimeException("Internal server error"))
                 .getData()

@@ -1,13 +1,13 @@
 package com.joizhang.chat.web.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.joizhang.chat.common.core.exception.ErrorCodes;
 import com.joizhang.chat.common.core.util.MsgUtils;
 import com.joizhang.chat.common.core.util.R;
+import com.joizhang.chat.common.security.annotation.Inner;
 import com.joizhang.chat.common.security.util.SecurityUtils;
 import com.joizhang.chat.web.api.entity.ChatCustomer;
 import com.joizhang.chat.web.api.vo.CustomerInfoVo;
@@ -16,13 +16,9 @@ import com.joizhang.chat.web.service.ChatCustomerService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,9 +41,10 @@ public class ChatCustomerController {
      */
     @GetMapping
     public R<CustomerInfoVo> getCustomerInfo() {
-        String username = SecurityUtils.getUser().getUsername();
+        Long userId = SecurityUtils.getUser().getId();
         ChatCustomer customer = customerService.getOne(
-                Wrappers.<ChatCustomer>lambdaQuery().eq(ChatCustomer::getUsername, username)
+                Wrappers.<ChatCustomer>lambdaQuery()
+                        .eq(ChatCustomer::getId, userId)
         );
         if (customer == null) {
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_QUERY_ERROR));
@@ -60,10 +57,12 @@ public class ChatCustomerController {
      *
      * @return 用户信息
      */
+    @Inner
     @GetMapping("/{username}")
-    public R<CustomerInfoVo> infoByUsername(@PathVariable String username) {
+    public R<CustomerInfoVo> getCustomerInfoByUsername(@PathVariable String username) {
         ChatCustomer customer = customerService.getOne(
-                Wrappers.<ChatCustomer>lambdaQuery().eq(ChatCustomer::getUsername, username)
+                Wrappers.<ChatCustomer>lambdaQuery()
+                        .eq(ChatCustomer::getUsername, username)
         );
         if (customer == null) {
             return R.failed(MsgUtils.getMessage(ErrorCodes.SYS_USER_USERINFO_EMPTY, username));
@@ -73,6 +72,7 @@ public class ChatCustomerController {
 
     /**
      * 更新用户信息
+     *
      * @param customer 用户信息
      * @return success/false
      */
@@ -81,6 +81,9 @@ public class ChatCustomerController {
         Long userId = SecurityUtils.getUser().getId();
         if (!userId.equals(customer.getId())) {
             return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));
+        }
+        if (StrUtil.isBlank(customer.getUsername())) {
+            customer.setUsername(SecurityUtils.getUser().getUsername());
         }
         return R.ok(customerService.updateCustomer(customer));
     }
@@ -94,17 +97,6 @@ public class ChatCustomerController {
      */
     @GetMapping("/query")
     public R<IPage<CustomerVo>> queryCustomers(Page<ChatCustomer> page, ChatCustomer customer) {
-        LambdaQueryWrapper<ChatCustomer> queryWrapper = Wrappers.<ChatCustomer>lambdaQuery()
-                .like(StrUtil.isNotBlank(customer.getUsername()), ChatCustomer::getUsername, customer.getUsername());
-        Page<ChatCustomer> customerPage = customerService.page(page, queryWrapper);
-        List<CustomerVo> records = customerPage.getRecords().stream().map(c -> {
-            CustomerVo customerVo = new CustomerVo();
-            BeanUtils.copyProperties(c, customerVo);
-            return customerVo;
-        }).collect(Collectors.toList());
-        Page<CustomerVo> customerVoPage = new Page<>(
-                customerPage.getCurrent(), customerPage.getSize(), customerPage.getTotal());
-        customerVoPage.setRecords(records);
-        return R.ok(customerVoPage);
+        return R.ok(customerService.queryCustomers(page, customer));
     }
 }
