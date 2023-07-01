@@ -12,7 +12,7 @@ import com.joizhang.chat.web.api.dto.ChatFriendRequestDTO;
 import com.joizhang.chat.web.api.entity.ChatCustomer;
 import com.joizhang.chat.web.api.entity.ChatFriend;
 import com.joizhang.chat.web.api.entity.ChatMessage;
-import com.joizhang.chat.web.api.vo.FriendCustomVo;
+import com.joizhang.chat.web.api.vo.FriendCustomerVo;
 import com.joizhang.chat.web.mapper.ChatFriendMapper;
 import com.joizhang.chat.web.service.ChatCustomerService;
 import com.joizhang.chat.web.service.ChatFriendService;
@@ -79,7 +79,7 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
     }
 
     @Override
-    public List<FriendCustomVo> getCustomersByAcceptFriends(ChatFriend chatFriendParam) {
+    public List<FriendCustomerVo> getCustomersByAcceptFriends(ChatFriend chatFriendParam) {
         Long userId = SecurityUtils.getUser().getId();
         // 查询当前用户好友IDs
         LambdaQueryWrapper<ChatFriend> queryWrapper = Wrappers.<ChatFriend>lambdaQuery()
@@ -108,17 +108,18 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
         // 转换
         return chatCustomers.stream()
                 .map((customer) -> {
-                    FriendCustomVo friendCustomVo = new FriendCustomVo();
+                    FriendCustomerVo friendCustomVo = new FriendCustomerVo();
                     BeanUtils.copyProperties(customer, friendCustomVo);
                     ChatFriend chatFriend = chatFriendMap.get(customer.getId());
                     friendCustomVo.setCreateTime(chatFriend.getCreateTime());
+                    friendCustomVo.setUpdateTime(chatFriend.getUpdateTime());
                     return friendCustomVo;
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<FriendCustomVo> getCustomersByPendingFriends(ChatFriend chatFriendParam) {
+    public List<FriendCustomerVo> getCustomersByPendingFriends(ChatFriend chatFriendParam) {
         Long userId = SecurityUtils.getUser().getId();
         // 查询当前用户待处理请求的好友IDs
         LambdaQueryWrapper<ChatFriend> queryWrapper = Wrappers.<ChatFriend>lambdaQuery()
@@ -147,10 +148,11 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
         // 转换
         return chatCustomers.stream()
                 .map((customer) -> {
-                    FriendCustomVo friendCustomVo = new FriendCustomVo();
+                    FriendCustomerVo friendCustomVo = new FriendCustomerVo();
                     BeanUtils.copyProperties(customer, friendCustomVo);
                     ChatFriend chatFriend = chatFriendMap.get(customer.getId());
                     friendCustomVo.setCreateTime(chatFriend.getCreateTime());
+                    friendCustomVo.setUpdateTime(chatFriend.getUpdateTime());
                     return friendCustomVo;
                 })
                 .collect(Collectors.toList());

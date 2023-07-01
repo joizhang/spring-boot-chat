@@ -8,7 +8,7 @@ import com.joizhang.chat.common.security.util.SecurityUtils;
 import com.joizhang.chat.web.api.constant.FriendRequestStatus;
 import com.joizhang.chat.web.api.dto.ChatFriendRequestDTO;
 import com.joizhang.chat.web.api.entity.ChatFriend;
-import com.joizhang.chat.web.api.vo.FriendCustomVo;
+import com.joizhang.chat.web.api.vo.FriendCustomerVo;
 import com.joizhang.chat.web.config.ChatConfigProperties;
 import com.joizhang.chat.web.service.ChatFriendService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -115,7 +115,7 @@ public class ChatFriendController {
      * @return 好友详细信息列表
      */
     @GetMapping("/customers")
-    public R<List<FriendCustomVo>> getCustomersByFriends(ChatFriend chatFriend) {
+    public R<List<FriendCustomerVo>> getCustomersByFriends(ChatFriend chatFriend) {
         Long userId = SecurityUtils.getUser().getId();
         if (!userId.equals(chatFriend.getUserId())) {
             return R.failed(MsgUtils.getSecurityMessage("ChatFriendController.illegalIdentity"));

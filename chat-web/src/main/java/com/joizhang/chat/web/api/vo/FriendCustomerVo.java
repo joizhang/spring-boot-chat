@@ -10,11 +10,16 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FriendCustomVo extends CustomerVo {
+public class FriendCustomerVo extends CustomerVo {
 
     /**
      * 添加好友的时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 好友信息更新时间
+     */
+    private LocalDateTime updateTime;
 
 }
