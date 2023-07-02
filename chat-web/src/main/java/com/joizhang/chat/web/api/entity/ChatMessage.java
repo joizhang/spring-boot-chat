@@ -44,6 +44,10 @@ public class ChatMessage extends BaseEntity {
      * {@link com.joizhang.chat.web.api.constant.MessageContentType}
      */
     @NotNull(message = "消息类型不能为空")
-    @Schema(description = "消息类型：1-error, 2-text and emoji, 3-image, 4-audio, 5-video")
+    @Schema(description = "消息类型：0-error, 1-text and emoji, 2-image, 3-video, 4-audio...")
     private Integer contentType;
+
+    @NotNull(message = "消息子类型不能为空")
+    @Schema(description = "消息子类型，默认为0")
+    private Integer contentSubtype;
 }

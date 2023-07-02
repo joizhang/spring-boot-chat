@@ -41,6 +41,7 @@ CREATE TABLE `chat_message` (
     `seq_num` bigint NOT NULL COMMENT '序号',
     `content` varchar(5000) NOT NULL COMMENT '消息内容',
     `content_type` int NOT NULL COMMENT '消息类型：1-text, 2-emoji, 3-image, 4-audio, 5-video',
+    `content_subtype` int NOT NULL COMMENT '消息子类型',
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
     `update_time` datetime DEFAULT NULL COMMENT '修改时间',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
@@ -94,8 +95,13 @@ CREATE TABLE `chat_community_member` (
     `community_id` bigint NOT NULL COMMENT '群聊id',
     `member_id` bigint NOT NULL COMMENT '用户id',
     `nickname` varchar(64) DEFAULT NULL COMMENT '群内昵称',
+    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+    `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
+    `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `community_member_idx1_community_member` (`community_id`, `member_id`)
+    UNIQUE KEY `community_member_idx1_community_member` (`community_id`, `member_id`),
+    KEY `community_member_idx2_member` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='聊天群成员';
 
 -- ----------------------------
