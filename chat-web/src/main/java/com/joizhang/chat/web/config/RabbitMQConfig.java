@@ -33,6 +33,9 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
+    /**
+     * 工作队列模式，消息通过轮训的方式发送给一个消费者
+     */
     @Bean
     public Queue messagePersistenceQueue() {
         return new Queue(RabbitConstants.QUEUE_WORK_MESSAGE_PERSISTENCE, true, false, false);

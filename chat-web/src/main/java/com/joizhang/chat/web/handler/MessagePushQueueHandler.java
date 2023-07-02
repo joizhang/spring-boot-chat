@@ -1,6 +1,7 @@
 package com.joizhang.chat.web.handler;
 
 import cn.hutool.json.JSONUtil;
+import com.joizhang.chat.ChatWebApplication;
 import com.joizhang.chat.web.api.constant.RabbitConstants;
 import com.joizhang.chat.web.api.entity.ChatMessage;
 import com.joizhang.chat.web.service.ChatMessageService;
@@ -12,6 +13,10 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.stereotype.Component;
 
+/**
+ * 发布订阅模式，每次启动{@link ChatWebApplication}都会新建一个新的队列，
+ * 消息会一次性发送给多个消费者
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
