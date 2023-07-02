@@ -21,11 +21,11 @@ public interface ChatFriendService extends IService<ChatFriend> {
     boolean exist(ChatFriend chatFriend);
 
     /**
-     * 保存并发送至消息队列
+     * 保存好友
      *
      * @param chatFriendRequestDTO 实体
      */
-    void saveAndSendToMQ(ChatFriendRequestDTO chatFriendRequestDTO);
+    void saveFriendRequest(ChatFriendRequestDTO chatFriendRequestDTO);
 
     /**
      * 查询好友详细信息列表

@@ -82,7 +82,7 @@ public class ChatFriendController {
         if (count >= chatConfig.getFriendLimit()) {
             return R.failed("You have reached the limit of friends");
         }
-        friendService.saveAndSendToMQ(friendRequestDTO);
+        friendService.saveFriendRequest(friendRequestDTO);
         return R.ok();
     }
 

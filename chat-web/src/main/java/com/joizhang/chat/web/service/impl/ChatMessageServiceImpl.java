@@ -89,8 +89,9 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         confirmChatMessage.setSenderId(0L);
         confirmChatMessage.setReceiverId(chatMessage.getSenderId());
         confirmChatMessage.setContentType(MessageContentType.ACK.getType());
-        confirmChatMessage.setContent(String.format("%s_%s_%s",
-                chatMessage.getSenderId(), chatMessage.getReceiverId(), chatMessage.getSeqNum()));
+        String messageKey = String.format("%s_%s_%s",
+                chatMessage.getSenderId(), chatMessage.getReceiverId(), chatMessage.getSeqNum());
+        confirmChatMessage.setContent(messageKey);
         rabbitTemplate.convertAndSend(RabbitConstants.EXCHANGE_FANOUT_MESSAGE, "", confirmChatMessage);
     }
 }

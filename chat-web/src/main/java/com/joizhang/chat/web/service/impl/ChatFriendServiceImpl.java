@@ -50,14 +50,11 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
 
     @Transactional
     @Override
-    public void saveAndSendToMQ(ChatFriendRequestDTO chatFriendRequestDTO) {
-        ChatMessage chatMessage = new ChatMessage();
+    public void saveFriendRequest(ChatFriendRequestDTO chatFriendRequestDTO) {
         if (FriendRequestStatus.PENDING.getStatus().equals(chatFriendRequestDTO.getRequestStatus())) {
-            chatMessage.setContent(FriendRequestStatus.PENDING.getStatus().toString());
             // 如果是PENDING，则保存好友请求发起者的好友关系信息
             this.save(chatFriendRequestDTO);
         } else if (FriendRequestStatus.ACCEPTED.getStatus().equals(chatFriendRequestDTO.getRequestStatus())) {
-            chatMessage.setContent(FriendRequestStatus.ACCEPTED.getStatus().toString());
             // 如果是ACCEPTED，则保存好友请求接受者的好友关系信息
             this.save(chatFriendRequestDTO);
             // 然后更新好友请求发起者的好友关系信息
@@ -71,11 +68,6 @@ public class ChatFriendServiceImpl extends ServiceImpl<ChatFriendMapper, ChatFri
         } else {
             throw new IllegalArgumentException("Illegal friend request");
         }
-        chatMessage.setSenderId(chatFriendRequestDTO.getUserId());
-        chatMessage.setReceiverId(chatFriendRequestDTO.getFriendId());
-        chatMessage.setSeqNum(chatFriendRequestDTO.getSeqNum());
-        chatMessage.setContentType(MessageContentType.FRIEND_REQ.getType());
-        messageService.sendToMQ(chatMessage);
     }
 
     @Override
