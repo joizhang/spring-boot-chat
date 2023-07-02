@@ -43,6 +43,11 @@ public class MessageVo implements Serializable {
     private Integer contentType;
 
     /**
+     * 消息子类型
+     */
+    private Integer contentSubtype;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

@@ -10,21 +10,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MessageContentType {
 
-    ERROR(1, "Error"),
+    ERROR(0, "Error"),
 
-    TEXT(2, "Text and emoji"),
+    TEXT(1, "Text and emoji"),
 
-    IMAGE(3, "Image"),
+    IMAGE(2, "Image"),
 
-    VIDEO(4, "Video"),
+    VIDEO(3, "Video"),
 
-    AUDIO(5, "Audio"),
+    AUDIO(4, "Audio"),
 
     /**
      * {@link FriendRequestStatus}
      */
     FRIEND_REQ(5, "Friend request"),
 
+    /**
+     * 消息确认
+     */
     ACK(6, "Message ACK"),
 
     /**

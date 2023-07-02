@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joizhang.chat.common.core.constant.CacheConstants;
+import com.joizhang.chat.web.api.constant.MessageContentSubtype;
 import com.joizhang.chat.web.api.constant.MessageContentType;
 import com.joizhang.chat.web.api.entity.ChatMessage;
 import com.joizhang.chat.web.api.vo.MessageVo;
@@ -71,6 +72,7 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
                     0L,
                     "ILLEGAL DATA FORMAT",
                     MessageContentType.ERROR.getType(),
+                    MessageContentSubtype.DEFAULT.getType(),
                     LocalDateTime.now()
             );
         } catch (IllegalArgumentException e) {
@@ -83,6 +85,7 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
                     0L,
                     "ILLEGAL ARGUMENT",
                     MessageContentType.ERROR.getType(),
+                    MessageContentSubtype.DEFAULT.getType(),
                     LocalDateTime.now()
             );
         } catch (AmqpException e) {
@@ -95,6 +98,7 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
                     0L,
                     "MESSAGE QUEUE CONNECTION ERROR",
                     MessageContentType.ERROR.getType(),
+                    MessageContentSubtype.DEFAULT.getType(),
                     LocalDateTime.now()
             );
         } catch (Exception e) {
@@ -107,6 +111,7 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
                     0L,
                     "SERVER ERROR",
                     MessageContentType.ERROR.getType(),
+                    MessageContentSubtype.DEFAULT.getType(),
                     LocalDateTime.now()
             );
         }
